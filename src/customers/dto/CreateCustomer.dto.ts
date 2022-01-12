@@ -20,7 +20,7 @@ export class CreateCustomerDto {
     name: string;
 
     @ValidateNested() // Will validate the fields of the sub dto
-    @Type(() => CreateCustomerDto)
+    @Type(() => CreateAddressDto)
     @IsNotEmptyObject()
     address: CreateAddressDto;
 }
