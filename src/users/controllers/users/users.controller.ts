@@ -1,4 +1,5 @@
 import {
+    Body,
     ClassSerializerInterceptor,
     Controller,
     Get,
@@ -8,9 +9,13 @@ import {
     //NotFoundException,
     Param,
     ParseIntPipe,
+    Post,
     UseFilters,
     UseInterceptors,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
+import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
 import { UserNotFoundException } from 'src/users/exceptions/UserNotFound.exception';
 import { HttpExceptionFiler } from 'src/users/filters/HttpException.filter';
 import { UsersService } from 'src/users/services/users/users.service';
@@ -58,5 +63,11 @@ export class UsersController {
         else throw new UserNotFoundException();
         // by adding the filter we can control how the reponse
         // of the exception is sent
+    }
+
+    @Post('create')
+    @UsePipes(ValidationPipe) // In order for the validation to occure
+    createUser(@Body() createUserDto: CreateUserDto) {
+        return this.userService.createUser(createUserDto);
     }
 }

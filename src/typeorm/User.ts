@@ -4,7 +4,6 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class User {
     @PrimaryGeneratedColumn({
         type: 'bigint',
-        name: 'user_id',
     })
     id: number;
 
@@ -17,9 +16,8 @@ export class User {
     @Column({
         default: '',
         nullable: false,
-        name: 'email_address',
     })
-    emailAddress: string;
+    email: string;
 
     @Column({
         default: '',

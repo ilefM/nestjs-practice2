@@ -1,30 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User as UserEntity } from 'src/typeorm';
+import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
 import { SerializedUser, User } from 'src/users/types';
+import { encodePassword } from 'src/utils/bcrypt';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-    private users: User[] = [
-        {
-            id: 1,
-            username: 'irion1',
-            password: 'irion1',
-        },
-        {
-            id: 2,
-            username: 'irion2',
-            password: 'irion2',
-        },
-        {
-            id: 3,
-            username: 'irion3',
-            password: 'irion3',
-        },
-        {
-            id: 4,
-            username: 'irion4',
-            password: 'irion4',
-        },
-    ];
+    constructor(
+        @InjectRepository(UserEntity)
+        private readonly userRepository: Repository<UserEntity>,
+    ) {}
+
+    private users: User[] = [];
 
     getUsers(): SerializedUser[] {
         return this.users.map((user) => new SerializedUser(user));
@@ -36,5 +25,19 @@ export class UsersService {
 
     getUserById(id: number): User {
         return this.users.find((user) => user.id === id);
+    }
+
+    createUser(createUserDto: CreateUserDto) {
+        const password = encodePassword(createUserDto.password);
+        const newUser = this.userRepository.create({
+            ...createUserDto,
+            password,
+        });
+        return this.userRepository.save(newUser);
+    }
+
+    // in this case we will search by username but we can do it by email
+    findUserByUsername(username: string): Promise<UserEntity | undefined> {
+        return this.userRepository.findOne({ username });
     }
 }

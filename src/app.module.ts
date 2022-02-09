@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CustomersModule } from './customers/customers.module';
-import entities from './users/typeorm';
+import entities from './typeorm';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { UsersModule } from './users/users.module';
             entities: entities, // cause its already an array
             synchronize: true,
         }),
+        AuthModule,
     ],
     controllers: [],
     providers: [],
